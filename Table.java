@@ -18,8 +18,9 @@ public class Table extends JPanel implements ActionListener{
 	
 	private ArrayList<Card> deck, playerDeck, dealerDeck;
 	private JButton hitButton, standButton, newGameButton, betButton;
+	private JButton aceValue1Button, aceValue11Button;
 	private int playerCardValue, dealerCardValue, playerPoints, dealerPoints;
-	private int currentBet, balance;
+	private int currentBet, balance, aceValue;
 	private Font pointFont;
 	private String winner, betPayout;
 	private JTextField betField;
@@ -87,6 +88,16 @@ public class Table extends JPanel implements ActionListener{
 		add(betButton);
 		betButton.setVisible(true);
 		
+		aceValue1Button = new JButton("Set Ace Value to 1");
+		aceValue1Button.setBounds(760,450,175,30);
+		aceValue1Button.addActionListener(this);
+		add(aceValue1Button);
+		
+		aceValue11Button = new JButton("Set Ace Value to 11");
+		aceValue11Button.setBounds(760,485,175,30);
+		aceValue11Button.addActionListener(this);
+		add(aceValue11Button);
+		
 		//JTextField
 		betField = new JTextField();
 		betField.setBounds(790,280,100,30);
@@ -99,6 +110,7 @@ public class Table extends JPanel implements ActionListener{
 		dealerPoints = 0;
 		balance = 100;
 		currentBet = 5;
+		aceValue = 11;
 		
 		//fonts
 		pointFont = new Font("Arial",Font.PLAIN,20);
@@ -172,6 +184,10 @@ public class Table extends JPanel implements ActionListener{
 			g.drawString("Please enter a bet",765,260);
 		}
 		
+		//ace value
+		g.setColor(Color.WHITE);
+		g.drawString("Ace Value: " + aceValue,780,425);
+		
 		//automatic stand
 		if( standButton.isVisible() ){
 			automaticStand();
@@ -211,8 +227,42 @@ public class Table extends JPanel implements ActionListener{
 			hitButton.setVisible(false);
 			standButton.setVisible(false);
 			newGameButton.setVisible(true);
-		} else if ( e.getSource() == betButton ){
+		} else if ( e.getSource() == betButton && newGameButton.isVisible() ){
 			currentBet = Integer.parseInt(betField.getText());
+		} else if ( e.getSource() == aceValue1Button ){
+			for(int i = 0;i < deck.size();i ++){
+				if( deck.get(i).getName().equals("A") ){
+					deck.get(i).setValue(1);
+				}
+			}
+			for(int i = 0;i < dealerDeck.size();i ++){
+				if( dealerDeck.get(i).getName().equals("A") ){
+					dealerDeck.get(i).setValue(1);
+				}
+			}
+			for(int i = 0;i < playerDeck.size();i ++){
+				if( playerDeck.get(i).getName().equals("A") ){
+					playerDeck.get(i).setValue(1);
+				}
+			}
+			aceValue = 1;
+		} else if ( e.getSource() == aceValue11Button ){
+			for(int i = 0;i < deck.size();i ++){
+				if( deck.get(i).getName().equals("A") ){
+					deck.get(i).setValue(11);
+				}
+			}
+			for(int i = 0;i < dealerDeck.size();i ++){
+				if( dealerDeck.get(i).getName().equals("A") ){
+					dealerDeck.get(i).setValue(11);
+				}
+			}
+			for(int i = 0;i < playerDeck.size();i ++){
+				if( playerDeck.get(i).getName().equals("A") ){
+					playerDeck.get(i).setValue(11);
+				}
+			}
+			aceValue = 11;
 		}
 		repaint();
 	}
